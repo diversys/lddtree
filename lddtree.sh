@@ -95,12 +95,12 @@ elf_specs_binutils() {
 
 # elf wrapper functions
 elf_rpath() { elf_rpath_$BACKEND "$@"; }
-elf_interp() { elf_interp_$BACKEND "$@"; }
+#elf_interp() { elf_interp_$BACKEND "$@"; }
 elf_needed() { elf_needed_$BACKEND "$@"; }
 elf_specs() { elf_specs_$BACKEND "$1"; }
 
 unset lib_paths_fallback
-for p in ${ROOT}lib* ${ROOT}usr/lib* ${ROOT}usr/local/lib*; do
+for p in ${ROOT}lib* ${ROOT}usr/lib* ${ROOT}usr/local/lib* ${ROOT}system/lib* ${ROOT}home/config/lib*; do
 	lib_paths_fallback="${lib_paths_fallback}${lib_paths_fallback:+:}${p}"
 done
 c_ldso_paths_loaded='false'
@@ -239,16 +239,16 @@ show_elf() {
 	resolved=${_resolv_links}
 	if [ ${indent} -eq 0 ] ; then
 		elf_specs=$(elf_specs "${resolved}")
-		interp=$(elf_interp "${resolved}")
+#		interp=$(elf_interp "${resolved}")
 		# ignore interpreters that do not have absolute path
 		[ "${interp#/}" = "${interp}" ] && interp=
 		[ -n "${interp}" ] && interp="${ROOT}${interp#/}"
 
-		if ${LIST} ; then
-			[ -n "${interp}" ] && resolv_links "${interp}" yes
-		else
-			printf " (interpreter => ${interp:-none})"
-		fi
+#		if ${LIST} ; then
+#			[ -n "${interp}" ] && resolv_links "${interp}" yes
+#		else
+#			printf " (interpreter => ${interp:-none})"
+#		fi
 		if [ -r "${interp}" ] ; then
 			# Extract the default lib paths out of the ldso.
 			lib_paths_ldso=$(
